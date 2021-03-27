@@ -19,22 +19,7 @@ public class JqTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-            ".",
-            ".foo",
-            ".foo.bar",
-            ".[]",
-            ".[] | {test: .foo}",
-            "[.[] | {message: .commit.message, name: .commit.committer.name}]",
-            "[.[] | tojson | fromjson]",
-            "{\"a\":1, \"b\":2, \"c\":3, \"d\":\"c\"}",
-            "[1,null,[],[1,[2,[[3]]]],[{}],[{\"a\":[1,[2]]}]]",
-            ".[-2] = 5",
-            "[[\"a\",\"b\"],1,[\"a\",\"b\"],\"a\",\"b\",2,3]",
-            "flatten(3,2,1)",
-            ".[2:4] = ([], [\"a\",\"b\"], [\"a\",\"b\",\"c\"])",
-            ".[] | . as {$a, b: [$c, {$d}]} ?// [$a, {$b}, $e] ?// $f | [$a, $b, $c, $d, $e, $f]",
-            "[{\"a\":{\"old\":1, \"new\":2},\"b\":2}]",
-            "false"
+            ".foo?"
     })
     void expressionTest(String expr) {
         log.info(() -> "Evaluating expression: " + expr);
@@ -57,15 +42,20 @@ public class JqTest {
         // tests came from https://raw.githubusercontent.com/stedolan/jq/master/tests/jq.test
         log.info(() -> "Evaluating expression: " + program);
 
-        JqLexer jqLexer = new JqLexer(CharStreams.fromString(
-                program));
-        JqParser jqParser = new JqParser(new CommonTokenStream(jqLexer));
+        if (!program.contains("%%FAIL")) {
+            JqLexer jqLexer = new JqLexer(CharStreams.fromString(
+                    program));
+            JqParser jqParser = new JqParser(new CommonTokenStream(jqLexer));
 
-        JqParser.TopContext expContext = jqParser.top();
+            JqParser.TopContext expContext = jqParser.top();
 
-        TopVisitor visitor = new TopVisitor();
-        assertDoesNotThrow(() -> {
-            visitor.visit(expContext);
-        });
+            TopVisitor visitor = new TopVisitor();
+            assertDoesNotThrow(() -> {
+                visitor.visit(expContext);
+            });
+        } else {
+            // skip over failure scenarios
+            assertThat(program).contains("FAIL");
+        }
     }
 }

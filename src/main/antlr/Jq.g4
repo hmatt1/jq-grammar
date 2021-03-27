@@ -76,9 +76,12 @@ term_list_inner
 term
 	: '.'
 	| '..'
-	| '.' FIELD '?'?
-	| '.' STRING '?'?
-	| '[' ']' '?'?
+	| '.' FIELD
+	| '.' FIELD '?'
+	| '.' STRING
+	| '.' STRING '?'
+	| '[' ']'
+	| '[' ']' '?'
 	| NUMBER
     | STRING
     | FIELD
@@ -129,7 +132,7 @@ STRING
 
 
 fragment ESC
-   : '\\' (["\\/bfnrt] | UNICODE)
+   : '\\' (["\\/bfnrt(] | UNICODE)
    ;
 fragment UNICODE
    : 'u' HEX HEX HEX HEX

@@ -6,6 +6,12 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 
 public class TopVisitor extends JqBaseVisitor<Object> {
     @Override
+    public Object visitTerm_list_inner(JqParser.Term_list_innerContext ctx) {
+        System.out.println("Term List Inner:" + ctx.getText());
+        return super.visitTerm_list_inner(ctx);
+    }
+
+    @Override
     public Object visitVPipe(JqParser.VPipeContext ctx) {
         System.out.println("vPipe:" + ctx.getText());
         return super.visitVPipe(ctx);
