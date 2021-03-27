@@ -5,10 +5,22 @@ import com.jq.JqParser.JqParser;
 import org.antlr.v4.runtime.tree.ErrorNode;
 
 public class TopVisitor extends JqBaseVisitor<Object> {
+//    @Override
+//    public Object visitTerm_list_inner(JqParser.Term_list_innerContext ctx) {
+//        System.out.println("Term List Inner:" + ctx.getText());
+//        return super.visitTerm_list_inner(ctx);
+//    }
+
     @Override
-    public Object visitTerm_list_inner(JqParser.Term_list_innerContext ctx) {
-        System.out.println("Term List Inner:" + ctx.getText());
-        return super.visitTerm_list_inner(ctx);
+    public Object visitVExp(JqParser.VExpContext ctx) {
+        System.out.println("vExp:" + ctx.getText());
+        return super.visitVExp(ctx);
+    }
+
+    @Override
+    public Object visitOperation(JqParser.OperationContext ctx) {
+        System.out.println("vOperation:" + ctx.getText());
+        return super.visitOperation(ctx);
     }
 
     @Override

@@ -19,7 +19,28 @@ public class JqTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-            ".foo?"
+            ". as $a // [$a, {$b}, $e]? // $f | [$a, $b]",
+            "a // b // c",
+            ".foo?",
+            ".",
+            ".foo",
+            ".foo.bar",
+            ".[]",
+            ".[] | {test: .foo}",
+            "[.[] | {message: .commit.message, name: .commit.committer.name}]",
+            "[.[] | tojson | fromjson]",
+            "{\"a\":1, \"b\":2, \"c\":3, \"d\":\"c\"}",
+            "[1,null,[],[1,[2,[[3]]]],[{}],[{\"a\":[1,[2]]}]]",
+            ".[-2] = 5",
+            "[[\"a\",\"b\"],1,[\"a\",\"b\"],\"a\",\"b\",2,3]",
+            "flatten(3,2,1)",
+            ".[2:4] = ([], [\"a\",\"b\"], [\"a\",\"b\",\"c\"])",
+            "{$a}",
+            ".[] | . as {$a}",
+            ".[] | . as {$a, b: [$c, {$d}]} ?// [$a, {$b}, $e] ?// $f | [$a, $b, $c, $d, $e, $f]",
+            ". as {$a, b: [$c, {$d}]} ?",
+            "[{\"a\":{\"old\":1, \"new\":2},\"b\":2}]",
+            "false"
     })
     void expressionTest(String expr) {
         log.info(() -> "Evaluating expression: " + expr);
@@ -34,6 +55,8 @@ public class JqTest {
         assertDoesNotThrow(() -> {
             visitor.visit(expContext);
         });
+
+        assertThat(expContext.getText().replaceAll("\\s+","")).isEqualTo(expr.replaceAll("\\s+",""));
     }
 
     @ParameterizedTest

@@ -8,21 +8,8 @@ top
 
 expd
     : value #vValue
-    | term_list '[' exp? ':'? exp? ']' '?'? # vTermListFilter
+    | exp # vExp
     ;
-
-json
-   : '{' pair (',' pair)* '}'
-   | '{' '}'
-   ;
-
-pair
-    : term_list ':' value
-    ;
-
-arr
-   : '[' value? (',' value)* ']'
-   ;
 
 value
    : json # vJson
@@ -30,58 +17,71 @@ value
    | term_list # vTermList
    | keyword # vKeyword
    | function # vFunction
+   | term_list '[' (exp|) (':'|) (exp|) ']' ('?'|) # vTermListFilter
    ;
 
 
+json
+   : '{' pair (',' pair)* '}' ('?'|)
+   | '{' '}'
+   ;
+
+pair
+    : term_list ':' value
+    | term_list
+    ;
+
+arr
+   : '[' (value|) (',' value)* ']' ('?'|)
+   | '(' (value|) (',' value)* ')' ('?'|)
+   ;
+
+
+
 exp
-    : term_list '?'
-	| term_list '=' term_list
-	| term_list 'or' term_list
-	| term_list 'and' term_list
-	| term_list '//' term_list
-	| term_list '//=' term_list
-	| term_list '|=' term_list
-	| term_list '|' term_list
-	| term_list ',' term_list
-	| term_list '+' term_list
-	| term_list '+=' term_list
-	| '-' term_list
-	| term_list '-' term_list
-	| term_list '-=' term_list
-	| term_list '*' term_list
-	| term_list '*=' term_list
-	| term_list '/' term_list
-	| term_list '%' term_list
-	| term_list '/=' term_list
-	| term_list '%=' term_list
-	| term_list '==' term_list
-	| term_list '!=' term_list
-	| term_list '<' term_list
-	| term_list '>' term_list
-	| term_list '<=' term_list
-	| term_list '>=' term_list
-	| term_list
+    : value '?'
+	| value (operation value)+
+	| value
+    ;
+
+operation
+    : '='
+	| 'or'
+	| 'and'
+	| '//'
+	| '//='
+	| '|='
+	| '|'
+	| ','
+	| '+'
+	| '+='
+	| '-'
+	| '-='
+	| '*'
+	| '*='
+	| '/'
+	| '%'
+	| '/='
+	| '%='
+	| '=='
+	| '!='
+	| '<'
+	| '>'
+	| '<='
+	| '>='
+	| 'as'
     ;
 
 term_list
-    : '(' term_list_inner ')'
-    | '[' term_list_inner ']'
-    | term_list_inner
-    ;
-
-term_list_inner
     : (term) +
     ;
 
 term
 	: '.'
+	| '?'
 	| '..'
-	| '.' FIELD
-	| '.' FIELD '?'
-	| '.' STRING
-	| '.' STRING '?'
 	| '[' ']'
-	| '[' ']' '?'
+	| '$'
 	| NUMBER
     | STRING
     | FIELD
@@ -132,7 +132,7 @@ STRING
 
 
 fragment ESC
-   : '\\' (["\\/bfnrt(] | UNICODE)
+   : '\\' (["\\/bfnrt] | UNICODE)
    ;
 fragment UNICODE
    : 'u' HEX HEX HEX HEX
@@ -165,4 +165,3 @@ fragment EXP
 WS
     :   (' ' | '\t' | '\r'| '\n') -> skip
     ;
-
