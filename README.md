@@ -5,7 +5,7 @@ This is an ANTLR 4 Java project that defines a grammar based on [jq](https://ste
 ## Related Projects
 
 - https://github.com/hmatt1/jq-quarkus
-- https://github.com/hmatt1/jq-grammar
+- https://github.com/hmatt1/jq-truffle
 
 ## References
 
