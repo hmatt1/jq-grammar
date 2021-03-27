@@ -6,10 +6,12 @@ import com.jq.util.TopVisitor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class JqTest {
@@ -49,4 +51,21 @@ public class JqTest {
         });
     }
 
+    @ParameterizedTest
+    @CsvFileSource(files = "./src/test/resources/jq-tests.csv", numLinesToSkip = 1)
+    void jqTests(String program, String input, String output) {
+        // tests came from https://raw.githubusercontent.com/stedolan/jq/master/tests/jq.test
+        log.info(() -> "Evaluating expression: " + program);
+
+        JqLexer jqLexer = new JqLexer(CharStreams.fromString(
+                program));
+        JqParser jqParser = new JqParser(new CommonTokenStream(jqLexer));
+
+        JqParser.TopContext expContext = jqParser.top();
+
+        TopVisitor visitor = new TopVisitor();
+        assertDoesNotThrow(() -> {
+            visitor.visit(expContext);
+        });
+    }
 }

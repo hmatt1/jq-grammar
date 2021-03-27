@@ -64,6 +64,12 @@ exp
     ;
 
 term_list
+    : '(' term_list_inner ')'
+    | '[' term_list_inner ']'
+    | term_list_inner
+    ;
+
+term_list_inner
     : (term) +
     ;
 
