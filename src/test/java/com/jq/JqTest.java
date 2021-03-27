@@ -76,6 +76,7 @@ public class JqTest {
             assertDoesNotThrow(() -> {
                 visitor.visit(expContext);
             });
+            assertThat(expContext.getText().replaceAll("\\s+","")).isEqualTo(program.replaceAll("\\s+",""));
         } else {
             // skip over failure scenarios
             assertThat(program).contains("FAIL");
