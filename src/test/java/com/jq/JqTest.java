@@ -19,6 +19,8 @@ public class JqTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
+            "myfunc()",
+            "{\"foo\": 1}",
             ". as $a // [$a, {$b}, $e]? // $f | [$a, $b]",
             "a // b // c",
             ".foo?",

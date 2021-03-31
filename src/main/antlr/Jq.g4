@@ -89,7 +89,7 @@ term
 	;
 
 function
-    : IDENT '(' args ')'
+    : IDENT '(' args? ')'
     ;
 
 args
